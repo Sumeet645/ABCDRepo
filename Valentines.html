@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Valentine </title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;500&display=swap"
+        rel="stylesheet">
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/elora');
+
+        :root {
+            --pink: #ecf3f3fd;
+            --gold: #ffb700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            font-family: 'Elora', sans-serif;
+            background-color: #000;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Custom Heart Cursor */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            background: var(--pink);
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            clip-path: path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
+            transform: translate(-50%, -50%);
+        }
+
+        .stage {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease-in-out;
+            /* FIXED BACKGROUND SETTINGS */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .stage.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+
+        /* Stage 2: Proposal */
+        #stage2 {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('bg.png');
+        }
+
+        .question {
+            font-family: 'Elora', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        /* Centered group as seen in your image */
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+            width: 100%;
+        }
+
+        .choice-btn {
+            padding: 15px 45px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.4rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        #yesBtn {
+            background: #e91e63;
+            color: white;
+            box-shadow: 0 0 20px rgba(233, 30, 99, 0.5);
+        }
+
+        #noBtn {
+            background: white;
+            color: #333;
+            position: relative;
+        }
+
+        /* Stage 3: Celebration */
+        #stage3 {
+            background:
+                linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                url('unnamed.jpg') center/cover no-repeat;
+        }
+
+        .glowing-name {
+            font-family: 'Elora', cursive;
+            font-size: 5.5rem;
+            animation: glow 2s infinite alternate;
+             position: relative;
+    top: 180px;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px #fff, 0 0 30px var(--pink);
+            }
+
+            to {
+                text-shadow: 0 0 40px #fff, 0 0 50px var(--gold), 0 0 80px var(--gold);
+            }
+        }
+
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: explode 1.2s forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(40);
+                opacity: 0;
+            }
+        }
+
+        #music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="cursor"></div>
+    <audio id="bgMusic" loop>
+        <source src="romantic-track.mp3" type="audio/mpeg">
+    </audio>
+    <button id="music-toggle" onclick="toggleMusic()">🎵 Music Toggle</button>
+
+    <section id="stage2" class="stage active">
+        <h2 class="question">Will you be my Valentine forever? </h2>
+        <div class="btn-group">
+            <button id="yesBtn" class="choice-btn" onclick="celebrate()">Yes </button>
+            <button id="noBtn" class="choice-btn">No 🥺</button>
+        </div>
+    </section>
+
+    <section id="stage3" class="stage">
+
+        <div id="fw"></div>
+        <h1 class="glowing-name">Guess you're stuck with me now  </h1>
+    </section>
+
+    <script>
+        const music = document.getElementById('bgMusic');
+        const noBtn = document.getElementById('noBtn');
+        const cursor = document.getElementById('cursor');
+        let moveNo = false;
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        function celebrate() {
+            document.getElementById('stage2').classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('stage3').classList.add('active');
+                startFw();
+            }, 600);
+        }
+
+        function toggleMusic() { music.paused ? music.play() : music.pause(); }
+
+        function runaway() {
+            if (!moveNo) { noBtn.style.position = 'fixed'; moveNo = true; }
+            const x = Math.random() * (window.innerWidth - 150);
+            const y = Math.random() * (window.innerHeight - 50);
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        noBtn.addEventListener('mouseover', runaway);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); runaway(); });
+
+        function startFw() {
+            const box = document.getElementById('fw');
+            const colors = ['#ff4d6d', '#ffb700', '#ffffff'];
+            setInterval(() => {
+                const f = document.createElement('div');
+                f.className = 'firework';
+                f.style.left = Math.random() * 100 + 'vw';
+                f.style.top = Math.random() * 100 + 'vh';
+                f.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                box.appendChild(f);
+                setTimeout(() => f.remove(), 1200);
+            }, 300);
+        }
+    </script>
+</body>
+
+</html>
